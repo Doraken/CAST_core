@@ -56,37 +56,37 @@ set_console_line
 
 
 print_header "starting directory path tests " 
-set_message "info" "0" "Function testDir_null_or_slash testing /tmp  ......."
+set_message "info" "0" "Function testDo_check_dir_null_or_slash testing /tmp  ......."
 set_spacer_message
 
-set_message "info" "0" "Function testDir_null_or_slash testing /tmp external ......."
+set_message "info" "0" "Function testDo_check_dir_null_or_slash testing /tmp external ......."
 set_console_line
 
-Dir_null_or_slash "/tmp" "1"
-set_console_line
-set_spacer_message
-
-set_message "info" "0" "Function testDir_null_or_slash testing /tmp internal ......."
-set_console_line
-Dir_null_or_slash "/tmp" "0"
-set_console_line
-
-
-set_spacer_message
-set_message "info" "0" "testDir_null_or_slash de / ......................."
-set_spacer_message
-
-set_console_line
-Dir_null_or_slash "/" "1" "1"
+Do_check_dir_null_or_slash "/tmp" "1"
 set_console_line
 set_spacer_message
 
+set_message "info" "0" "Function testDo_check_dir_null_or_slash testing /tmp internal ......."
+set_console_line
+Do_check_dir_null_or_slash "/tmp" "0"
+set_console_line
 
-set_message "info" "0" "testDir_null_or_slash de null ......................."
+
+set_spacer_message
+set_message "info" "0" "testDo_check_dir_null_or_slash de / ......................."
 set_spacer_message
 
 set_console_line
-Dir_null_or_slash "" "1" "1"
+Do_check_dir_null_or_slash "/" "1" "1"
+set_console_line
+set_spacer_message
+
+
+set_message "info" "0" "testDo_check_dir_null_or_slash de null ......................."
+set_spacer_message
+
+set_console_line
+Do_check_dir_null_or_slash "" "1" "1"
 set_console_line
 
 print_header "starting directory create tests " 
@@ -114,42 +114,42 @@ print_header "starting error controle function test "
 set_message "info" "0" "testing sucess  ......."
 
 set_console_line
-error_CTRL "0" "Operation completed successfully"
+do_error_control "0" "Operation completed successfully"
 set_console_line
 
 set_spacer_message
 set_message "info" "0" "testing error  ......."
 
 set_console_line
-error_CTRL "1" "with completion message" "0" "1" "error control function autotesting" 
+do_error_control "1" "with completion message" "0" "1" "error control function autotesting" 
 set_console_line
 
 set_console_line
-error_CTRL "0" "with completion message" "0" "1" "error control function autotesting" 
+do_error_control "0" "with completion message" "0" "1" "error control function autotesting" 
 set_console_line
 
 
 print_header "starting empty var control function test " 
 set_spacer_message
 
-set_message "info" "0" "Function Empty_Var_Control testing as external ......."
+set_message "info" "0" "Function do_empty_var_control testing as external ......."
 set_console_line
 
-Empty_Var_Control "${my_var}" "my_var" "2" "1" "1"
+do_empty_var_control "${my_var}" "my_var" "2" "1" "1"
 set_console_line
 my_var="something" 
-Empty_Var_Control "${my_var}" "my_var" "2" "1" "1"
+do_empty_var_control "${my_var}" "my_var" "2" "1" "1"
 set_console_line
 set_spacer_message
 
-set_message "info" "0" "Function Empty_Var_Control testing as internal ......."
+set_message "info" "0" "Function do_empty_var_control testing as internal ......."
 set_console_line
-set_message "info" "0" "Function Empty_Var_Control with empty var ......."
-Empty_Var_Control "${my_var2}" "my_var2" "2" "0" "1"
+set_message "info" "0" "Function do_empty_var_control with empty var ......."
+do_empty_var_control "${my_var2}" "my_var2" "2" "0" "1"
 set_console_line
 my_var2="something" 
-set_message "info" "0" "Function Empty_Var_Control with not empty var ( blank result )......."
-Empty_Var_Control "${my_var2}" "my_var2" "2" "0" "1"
+set_message "info" "0" "Function do_empty_var_control with not empty var ( blank result )......."
+do_empty_var_control "${my_var2}" "my_var2" "2" "0" "1"
 set_console_line
 
 

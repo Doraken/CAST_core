@@ -1,3 +1,9 @@
+---
+noteId: "48d1936042ee11f1856b77141f89e789"
+tags: []
+
+---
+
 # CAST - CORE
 
 ## 📌 Description
@@ -40,13 +46,13 @@ flowchart TD
     G --> H[Script métier]
 
     H --> I[Validation entrées]
-    I --> I1[Empty_Var_Control]
+    I --> I1[do_empty_var_control]
     I1 --> I2{Variable OK ?}
     I2 -->|Non| J[set_message EdEMessage]
     I2 -->|Oui| K[Action métier]
 
     K --> L[Exécution commande système]
-    L --> M[error_CTRL]
+    L --> M[do_error_control]
 
     M --> M1{Code retour = 0 ?}
     M1 -->|Oui| N[set_message EdSMessage]
@@ -94,14 +100,14 @@ flowchart TD
 
 ### 🚨 Gestion des erreurs
 
-* `error_CTRL`
+* `do_error_control`
 * exécution conditionnelle (success / fail hooks)
 * contrôle du niveau de criticité
 * support des workflows automatisés
 
 ### 🔐 Validation des entrées
 
-* `Empty_Var_Control`
+* `do_empty_var_control`
 * contrôle strict des variables
 * mode test (non bloquant)
 * gestion interne/externe
@@ -110,7 +116,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[set_new_directory] --> B[Dir_null_or_slash]
+    A[set_new_directory] --> B[Do_check_dir_null_or_slash]
     B --> C{Chemin valide ?}
 
     C -->|Vide| X[EdEMessage]
@@ -126,12 +132,12 @@ flowchart TD
 ```
 
 * `set_new_directory`
-* `Dir_null_or_slash`
+* `Do_check_dir_null_or_slash`
 * protection contre erreurs critiques (`/`, vide)
 
 ### 🌐 Téléchargement HTTP
 
-* `Internet_Http_Get`
+* `get_http_object`
 * gestion idempotente
 * validation post-download
 
@@ -139,10 +145,10 @@ flowchart TD
 
 ``` mermaid
 flowchart TD
-    A[Do_apt_install_package] --> B[Empty_Var_Control]
+    A[Do_apt_install_package] --> B[do_empty_var_control]
     B --> C[Test_apt_package_presence]
     C --> D[dpkg-query --show package]
-    D --> E[error_CTRL]
+    D --> E[do_error_control]
 
     E --> F{Package trouvé ?}
     F -->|Oui| G[Test_apt_package_presence_sub_i]
@@ -156,7 +162,7 @@ flowchart TD
 
     K -->|INSTALLED| L[Aucune action]
     K -->|NOT INSTALLED| M[apt-get install -y package]
-    M --> N[error_CTRL]
+    M --> N[do_error_control]
     N --> O[set_message résultat]
 ```
 
@@ -260,7 +266,7 @@ ${variable}
 * fonctions déclarées :
 
 ```bash
-function name ()
+function name()
 {
 }
 ```
@@ -279,7 +285,7 @@ set_message
 * toujours via :
 
 ``` bash
-error_CTRL
+do_error_control
 ```
 
 ---
@@ -289,7 +295,7 @@ error_CTRL
 Exemple :
 
 ```bash
-error_CTRL "${?}" "" "0" "1" "" "on_fail" "on_success"
+do_error_control "${?}" "" "0" "1" "" "on_fail" "on_success"
 ```
 
 ➡️ Permet :

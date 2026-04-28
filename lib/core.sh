@@ -18,8 +18,7 @@ case "${actual_shell}" in
 		     exit 1
 			  ;;
      *)
-        echo "unknown : exiting"
-				exit 1
+        echo "unknown : maybe no fully functional"
         ;;
 esac
 
@@ -120,7 +119,7 @@ function print_header()
 	echo ""
 }
 
-function error_CTRL() 
+function do_error_control() 
 {
 	#|# Description :
 	#|# Centralized error handling and post-action execution controller.
@@ -176,9 +175,9 @@ function error_CTRL()
 	#|# - Bash context variables: FUNCNAME, dirname
 	#|#
 	#|# Usage :
-	#|# error_CTRL "${?}" "Operation completed"
-	#|# error_CTRL "${?}" "Directory created" "2" "1" "Creating directory"
-	#|# error_CTRL "${?}" "Step failed" "1" "1" "Processing step" "cleanup_function" ""
+	#|# do_error_control "${?}" "Operation completed"
+	#|# do_error_control "${?}" "Directory created" "2" "1" "Creating directory"
+	#|# do_error_control "${?}" "Step failed" "1" "1" "Processing step" "cleanup_function" ""
 	#|#
 	#|# Output :
 	#|# - Success → formatted success message + optional success action execution
@@ -229,7 +228,7 @@ function error_CTRL()
 	####################################################
 }
 
-function Empty_Var_Control() 
+function do_empty_var_control() 
 {
 	#|# Description :
 	#|# Validates that a provided variable is defined and not empty.
@@ -273,7 +272,7 @@ function Empty_Var_Control()
 	#|# - Bash context variables: FUNCNAME, dirname
 	#|#
 	#|# Usage example :
-	#|# Empty_Var_Control "${my_var}" "my_var" "2" "1" "0"
+	#|# do_empty_var_control "${my_var}" "my_var" "2" "1" "0"
 	#|#
 	#|# Output :
 	#|# - Success → validation confirmation (optional)
@@ -499,7 +498,7 @@ function set_length()
 	add_string="$(printf "%-${length_add}s" "-")"
 }
 
-function Dir_null_or_slash() 
+function Do_check_dir_null_or_slash() 
 {
 	#|# Var to set  :
 	#|# Path_To_test : The path of the directory to test
@@ -510,7 +509,7 @@ function Dir_null_or_slash()
 	#|# or just a root slash ('/'). If either condition is met, an error message is displayed.
 	#|#
 	#|# Basic Usage :
-	#|#               Dir_null_or_slash "My_directory_path" ""
+	#|#               Do_check_dir_null_or_slash "My_directory_path" ""
 	############ STACK_TRACE_BUILDER #####################
 	Function_Name="${FUNCNAME[0]}"
 	Function_PATH="${Function_PATH}/${Function_Name}"
@@ -576,7 +575,7 @@ function set_new_directory()
 	local Base_param_Dir_To_Create="${1}"
 	local level=${2:-1}
 
-	Dir_null_or_slash "${Base_param_Dir_To_Create}"
+	Do_check_dir_null_or_slash "${Base_param_Dir_To_Create}"
 	set_message "check" "${level}" "Checking directory: [ ${Base_param_Dir_To_Create} ] "
 	if [[ -z ${runned} ]]
   	then
@@ -604,12 +603,12 @@ function set_new_directory()
 	####################################################
 }
 
-function File_Read()
+function do_file_read()
 {
 	#|# Data_miner                             : Use this var to set which function or cmd to make data mining in line
 	#|# ${1}                                   : Use this var to set Data_miner
 	#|# use "<<" to send file to function
-	#|# Basic usage : File_Read ["data miner"] << file
+	#|# Basic usage : do_file_read ["data miner"] << file
 	############ STACK_TRACE_BUILDER #####################
 	Function_Name="${FUNCNAME[0]}"
 	Function_PATH="${Function_PATH}/${Function_Name}"
@@ -618,7 +617,7 @@ function File_Read()
 
 	Data_miner="${1}"
 
-	Empty_Var_Control "${Data_miner}" "Data_miner" "4"
+	do_empty_var_control "${Data_miner}" "Data_miner" "4"
 
 	while read Internal_myline
 		do
@@ -727,7 +726,7 @@ function do_load_file()
 
 }
 
-function Internet_Http_Get {
+function get_http_object {
 	#|# Description :
 	#|# Download a file over HTTP/HTTPS using wget and store it in a target directory.
 	#|# This function builds a full download URL from provided parameters, ensures the
@@ -754,7 +753,7 @@ function Internet_Http_Get {
 	#|# Behavior :
 	#|# - Builds and updates the stack trace context (Function_PATH)
 	#|# - Logs execution context in debug mode
-	#|# - Validates all mandatory input variables using Empty_Var_Control()
+	#|# - Validates all mandatory input variables using do_empty_var_control()
 	#|# - Constructs the full download URL from base URL, file name, and optional parameters
 	#|# - Ensures target directory exists using set_new_directory()
 	#|# - Emits a check message before starting the download
@@ -771,14 +770,14 @@ function Internet_Http_Get {
 	#|#
 	#|# Dependencies :
 	#|# - wget
-	#|# - Empty_Var_Control()
+	#|# - do_empty_var_control()
 	#|# - set_new_directory()
 	#|# - set_message()
 	#|# - dirname
 	#|#
 	#|# Usage :
-	#|# Internet_Http_Get "https://example.com" "file.tar.gz" "/tmp/downloads"
-	#|# Internet_Http_Get "https://example.com" "file.tar.gz" "/tmp/downloads" "?auth=token"
+	#|# get_http_object "https://example.com" "file.tar.gz" "/tmp/downloads"
+	#|# get_http_object "https://example.com" "file.tar.gz" "/tmp/downloads" "?auth=token"
 	#|#
 	#|# Return :
 	#|# - No explicit return value
@@ -794,9 +793,9 @@ function Internet_Http_Get {
 	local _download_directory="${3}"
 	local _additional_url_parameters="${4}"
 
-	Empty_Var_Control "${_base_url}"                 "_base_url"                 "2" "1" "0"
-	Empty_Var_Control "${_base_downladed_file_name}" "_base_downladed_file_name" "2" "1" "0"
-	Empty_Var_Control "${_download_directory}"       "_download_directory"       "2" "1" "0"
+	do_empty_var_control "${_base_url}"                 "_base_url"                 "2" "1" "0"
+	do_empty_var_control "${_base_downladed_file_name}" "_base_downladed_file_name" "2" "1" "0"
+	do_empty_var_control "${_download_directory}"       "_download_directory"       "2" "1" "0"
   
 	
 	local _full_download_url="${_base_url}/${_base_downladed_file_name}${_additional_url_parameters}"
@@ -842,7 +841,7 @@ function Do_apt_update ()
      	set_message "EdSMessage" "1" "already done"
     else
       sudo apt-get update > /dev/null 2>&1 
-      error_CTRL "${?}" "status for package catalogue update: " "Not Installed" "4" "" "" "nomsg"
+      do_error_control "${?}" "status for package catalogue update: " "Not Installed" "4" "" "" "nomsg"
 			_apt_update_runed="1"
   fi 
 	############### Stack_TRACE_BUILDER ################
@@ -856,7 +855,7 @@ function Do_apt_install_package ()
 	#|# Install a specified package using the APT package manager on Debian-based systems.
 	#|# This function ensures idempotent behavior by first checking whether the package
 	#|# is already installed before attempting installation. It integrates with the
-	#|# centralized error handling system (error_CTRL) for consistent execution control.
+	#|# centralized error handling system (do_error_control) for consistent execution control.
 	#|#
 	#|# Parameters :
 	#|# ${1} : _package_name
@@ -866,20 +865,20 @@ function Do_apt_install_package ()
 	#|# Behavior :
 	#|# - Builds and updates the stack trace context (Function_PATH)
 	#|# - Logs current execution context in debug mode
-	#|# - Validates that _package_name is not empty using Empty_Var_Control()
+	#|# - Validates that _package_name is not empty using do_empty_var_control()
 	#|# - Calls Test_apt_package_presence() to determine installation status
 	#|# - If aptPackageStatus == "NOT INSTALLED":
 	#|#     → emits a check message before installation
 	#|#     → executes `apt-get install -y` silently
-	#|#     → delegates result handling to error_CTRL()
+	#|#     → delegates result handling to do_error_control()
 	#|# - If aptPackageStatus == "INSTALLED":
 	#|#     → no action performed (idempotent behavior)
 	#|#
 	#|# Dependencies :
 	#|# - apt-get
 	#|# - Test_apt_package_presence()
-	#|# - error_CTRL()
-	#|# - Empty_Var_Control()
+	#|# - do_error_control()
+	#|# - do_empty_var_control()
 	#|# - set_message()
 	#|# - Global variable:
 	#|#     aptPackageStatus : must be set by Test_apt_package_presence()
@@ -893,13 +892,13 @@ function Do_apt_install_package ()
 	#|#
 	#|# Return :
 	#|# - No explicit return value
-	#|# - Execution flow controlled via error_CTRL()
+	#|# - Execution flow controlled via do_error_control()
 	############ STACK_TRACE_BUILDER #####################
 	Function_PATH="${Function_PATH}/${FUNCNAME[0]}"
 	######################################################
 	set_message "debug" "0" "current function path : [ ${Function_PATH} ]"
   local _package_name="${1}"
-	Empty_Var_Control "${_package_name}" "_package_name" "2" "1" "0"
+	do_empty_var_control "${_package_name}" "_package_name" "2" "1" "0"
 
   Test_apt_package_presence "${_package_name}"
     
@@ -907,7 +906,7 @@ function Do_apt_install_package ()
 		then 
 	    set_message "chack" "0" "installing package : [ ${_package_name} ]" 
       apt-get install "${_package_name}" -y > /dev/null 2>&1 
-			error_CTRL "${?}" "" "0" "1" "" 
+			do_error_control "${?}" "" "0" "1" "" 
   fi
 
 	############### Stack_TRACE_BUILDER ################
@@ -921,7 +920,7 @@ function Do_apt_uninstall_package ()
 	#|# Uninstall a specified package using the APT package manager on Debian-based systems.
 	#|# This function first checks if the package is currently installed, then performs
 	#|# a removal operation only if necessary. It integrates with the centralized error
-	#|# handling mechanism (error_CTRL) to standardize execution flow and messaging.
+	#|# handling mechanism (do_error_control) to standardize execution flow and messaging.
 	#|#
 	#|# Parameters :
 	#|# ${1} : _package_name
@@ -935,14 +934,14 @@ function Do_apt_uninstall_package ()
 	#|# - If aptPackageStatus == "INSTALLED":
 	#|#     → emits a check message before uninstall
 	#|#     → executes `apt-get remove -y` silently
-	#|#     → delegates result handling to error_CTRL()
+	#|#     → delegates result handling to do_error_control()
 	#|# - If aptPackageStatus != "INSTALLED":
 	#|#     → no action performed (idempotent behavior)
 	#|#
 	#|# Dependencies :
 	#|# - apt-get
 	#|# - Test_apt_package_presence()
-	#|# - error_CTRL()
+	#|# - do_error_control()
 	#|# - set_message()
 	#|# - Global variable:
 	#|#     aptPackageStatus : must be set by Test_apt_package_presence()
@@ -956,7 +955,7 @@ function Do_apt_uninstall_package ()
 	#|#
 	#|# Return :
 	#|# - No explicit return value
-	#|# - Execution flow controlled via error_CTRL()
+	#|# - Execution flow controlled via do_error_control()
 	############ STACK_TRACE_BUILDER #####################
 	Function_PATH="${Function_PATH}/${FUNCNAME[0]}"
 	######################################################
@@ -971,7 +970,7 @@ function Do_apt_uninstall_package ()
 		then 
 	    set_message "chack" "0" "uninstalling package : [ ${_package_name} ]" 
       apt-get remove "${_package_name}" -y > /dev/null 2>&1 
-			error_CTRL "${?}" "" "0" "1" "" 
+			do_error_control "${?}" "" "0" "1" "" 
   fi
 
 
@@ -986,7 +985,7 @@ function Test_apt_package_presence ()
 	#|# Description :
 	#|# Check whether a given package is installed on the system using the APT/DPKG
 	#|# package manager. This function relies on dpkg-query and integrates with
-	#|# error_CTRL to handle success and failure workflows through callback functions.
+	#|# do_error_control to handle success and failure workflows through callback functions.
 	#|#
 	#|# Parameters :
 	#|# ${1} : _package_name
@@ -996,10 +995,10 @@ function Test_apt_package_presence ()
 	#|# Behavior :
 	#|# - Builds and updates the stack trace context (Function_PATH)
 	#|# - Logs current execution context in debug mode
-	#|# - Validates that _package_name is not empty using Empty_Var_Control()
+	#|# - Validates that _package_name is not empty using do_empty_var_control()
 	#|# - Emits a check message before performing the lookup
 	#|# - Executes `dpkg-query --show` to determine package presence
-	#|# - Delegates result handling to error_CTRL:
+	#|# - Delegates result handling to do_error_control:
 	#|#     → If package is found (exit code 0):
 	#|#         - triggers Test_apt_package_presence_sub_i (success callback)
 	#|#         - sets aptPackageStatus to "INSTALLED"
@@ -1009,8 +1008,8 @@ function Test_apt_package_presence ()
 	#|#
 	#|# Dependencies :
 	#|# - dpkg-query
-	#|# - Empty_Var_Control()
-	#|# - error_CTRL()
+	#|# - do_empty_var_control()
+	#|# - do_error_control()
 	#|# - set_message()
 	#|# - Callback functions:
 	#|#     Test_apt_package_presence_sub_i
@@ -1034,11 +1033,11 @@ function Test_apt_package_presence ()
 	set_message "debug" "0" "current function path : [ ${Function_PATH} ]  | function Name [ ${Function_Name} ] "
 
 	local _package_name="${1}"
-	Empty_Var_Control "${_package_name}" "_package_name" "2" "1" "0"
+	do_empty_var_control "${_package_name}" "_package_name" "2" "1" "0"
 
 	set_message "chack" "0" "searching for installed package : [ ${_package_name} ] " 
 	dpkg-query --show "${_package_name}" > /dev/null 2>&1
-	error_CTRL "${?}" "" "0" "1" "" "Test_apt_package_presence_sub_i" "Test_apt_package_presence_sub_u"
+	do_error_control "${?}" "" "0" "1" "" "Test_apt_package_presence_sub_i" "Test_apt_package_presence_sub_u"
 
 	############### Stack_TRACE_BUILDER ################
 	Function_PATH="$( dirname ${Function_PATH} )"
@@ -1048,7 +1047,7 @@ function Test_apt_package_presence ()
 function Test_apt_package_presence_sub_i ()
 {
 	#|# Description :
-	#|# Callback function used in conjunction with error_CTRL to handle the
+	#|# Callback function used in conjunction with do_error_control to handle the
 	#|# "package present" scenario during APT package checks.
 	#|# This function is typically triggered via the _on_sucess_action hook when
 	#|# a package presence test succeeds.
@@ -1064,12 +1063,12 @@ function Test_apt_package_presence_sub_i ()
 	#|#
 	#|# Dependencies :
 	#|# - set_message() : for debug logging
-	#|# - error_CTRL()  : caller function using this as callback
+	#|# - do_error_control()  : caller function using this as callback
 	#|# - Global variable:
 	#|#     aptPackageStatus : status flag updated by this function
 	#|#
 	#|# Usage :
-	#|# error_CTRL "${?}" "Package detected" "0" "1" "Checking package" "" "Test_apt_package_presence_sub_i"
+	#|# do_error_control "${?}" "Package detected" "0" "1" "Checking package" "" "Test_apt_package_presence_sub_i"
 	#|#
 	#|# Output :
 	#|# - Debug message only (if DEBUG_MODE=1)
@@ -1092,7 +1091,7 @@ function Test_apt_package_presence_sub_i ()
 function Test_apt_package_presence_sub_u ()
  {
 	#|# Description :
-	#|# Callback function used in conjunction with error_CTRL to handle the
+	#|# Callback function used in conjunction with do_error_control to handle the
 	#|# "package not present" scenario during APT package checks.
 	#|# This function is typically triggered via the _on_fail_action hook when
 	#|# a package presence test fails.
@@ -1108,12 +1107,12 @@ function Test_apt_package_presence_sub_u ()
 	#|#
 	#|# Dependencies :
 	#|# - set_message() : for debug logging
-	#|# - error_CTRL()  : caller function using this as callback
+	#|# - do_error_control()  : caller function using this as callback
 	#|# - Global variable:
 	#|#     aptPackageStatus : status flag updated by this function
 	#|#
 	#|# Usage :
-	#|# error_CTRL "${?}" "Package missing" "0" "1" "Checking package" "Test_apt_package_presence_sub_u" ""
+	#|# do_error_control "${?}" "Package missing" "0" "1" "Checking package" "Test_apt_package_presence_sub_u" ""
 	#|#
 	#|# Output :
 	#|# - Debug message only (if DEBUG_MODE=1)
