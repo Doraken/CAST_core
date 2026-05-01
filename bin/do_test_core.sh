@@ -56,37 +56,37 @@ set_console_line
 
 
 print_header "starting directory path tests " 
-set_message "info" "0" "Function testDo_check_dir_null_or_slash testing /tmp  ......."
+set_message "info" "0" "Function testdo_check_dir_null_or_slash testing /tmp  ......."
 set_spacer_message
 
-set_message "info" "0" "Function testDo_check_dir_null_or_slash testing /tmp external ......."
+set_message "info" "0" "Function testdo_check_dir_null_or_slash testing /tmp external ......."
 set_console_line
 
-Do_check_dir_null_or_slash "/tmp" "1"
-set_console_line
-set_spacer_message
-
-set_message "info" "0" "Function testDo_check_dir_null_or_slash testing /tmp internal ......."
-set_console_line
-Do_check_dir_null_or_slash "/tmp" "0"
-set_console_line
-
-
-set_spacer_message
-set_message "info" "0" "testDo_check_dir_null_or_slash de / ......................."
-set_spacer_message
-
-set_console_line
-Do_check_dir_null_or_slash "/" "1" "1"
+do_check_dir_null_or_slash "/tmp" "1"
 set_console_line
 set_spacer_message
 
+set_message "info" "0" "Function testdo_check_dir_null_or_slash testing /tmp internal ......."
+set_console_line
+do_check_dir_null_or_slash "/tmp" "0"
+set_console_line
 
-set_message "info" "0" "testDo_check_dir_null_or_slash de null ......................."
+
+set_spacer_message
+set_message "info" "0" "testdo_check_dir_null_or_slash de / ......................."
 set_spacer_message
 
 set_console_line
-Do_check_dir_null_or_slash "" "1" "1"
+do_check_dir_null_or_slash "/" "1" "1"
+set_console_line
+set_spacer_message
+
+
+set_message "info" "0" "testdo_check_dir_null_or_slash de null ......................."
+set_spacer_message
+
+set_console_line
+do_check_dir_null_or_slash "" "1" "1"
 set_console_line
 
 print_header "starting directory create tests " 

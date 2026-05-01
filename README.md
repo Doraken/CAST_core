@@ -116,7 +116,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[set_new_directory] --> B[Do_check_dir_null_or_slash]
+    A[set_new_directory] --> B[do_check_dir_null_or_slash]
     B --> C{Chemin valide ?}
 
     C -->|Vide| X[EdEMessage]
@@ -132,7 +132,7 @@ flowchart TD
 ```
 
 * `set_new_directory`
-* `Do_check_dir_null_or_slash`
+* `do_check_dir_null_or_slash`
 * protection contre erreurs critiques (`/`, vide)
 
 ### 🌐 Téléchargement HTTP
@@ -145,7 +145,7 @@ flowchart TD
 
 ``` mermaid
 flowchart TD
-    A[Do_apt_install_package] --> B[do_empty_var_control]
+    A[do_apt_install_package] --> B[do_empty_var_control]
     B --> C[Test_apt_package_presence]
     C --> D[dpkg-query --show package]
     D --> E[do_error_control]
@@ -167,9 +167,9 @@ flowchart TD
 ```
 
 
-* `Do_apt_update`
-* `Do_apt_install_package`
-* `Do_apt_uninstall_package`
+* `do_apt_update`
+* `do_apt_install_package`
+* `do_apt_uninstall_package`
 * `Test_apt_package_presence`
 
 ➡️ Gestion intelligente via variable globale :
