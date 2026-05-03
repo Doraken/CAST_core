@@ -255,6 +255,86 @@ function do_git_push ()
 }
 
 
+function do_git_clone ()
+{
+  	#|# Description :
+	#|# This function clones a Git repository into a specified directory.
+	#|# It supports optional branch selection and integrates with the CAST
+	#|# logging, error control, and stack trace mechanisms.
+	#|#
+	#|# Parameters :
+	#|# ${1} : _repo_url
+	#|#        URL of the Git repository to clone (Mandatory)
+	#|#
+	#|# ${2} : _path_to_clone
+	#|#        Target directory where the repository will be cloned (Mandatory)
+	#|#
+	#|# ${3} : _branche_name
+	#|#        Optional branch name to checkout during clone (Optional)
+	#|#
+	#|# Behavior :
+	#|# - Updates the function call stack for traceability
+	#|# - Validates required input variables using do_empty_var_control
+	#|# - Prepares optional branch parameter if provided
+	#|# - Ensures the target directory exists via set_new_directory
+	#|# - Moves into the target directory context
+	#|# - Executes git clone with optional branch
+	#|# - Redirects output to the global log file
+	#|# - Performs error handling via do_error_control
+	#|# - Restores the initial working directory
+	#|#
+	#|# Dependencies :
+	#|# - do_empty_var_control
+	#|# - set_new_directory
+	#|# - set_message
+	#|# - do_error_control
+	#|# - git (must be installed and accessible)
+	#|#
+	#|# Output :
+	#|# - Cloned repository in the specified directory
+	#|# - Logs written to ${log_file}
+	#|#
+	#|# Return :
+	#|# - Standard exit code propagated via do_error_control
+	############ STACK_TRACE_BUILDER #####################
+	Function_PATH="${Function_PATH}/${FUNCNAME[0]}"
+	######################################################
+  local _repo_url ="${1}"
+  local _path_to_clone="${2}"
+  local _branche_name="${3}"
+
+  do_empty_var_control "${_repo_url }"        "_repo_url "         "2" "1" "0"
+  do_empty_var_control "${_path_to_clone }"   "_path_to_clone "    "2" "1" "0"
+  
+  if [[ ! -z ${_branche_name} ]]  
+     then 
+         _branche_nam="-b ${_branche_nam}"
+  fi
+  
+   set_new_directory "${_path_to_clone}"
+
+  set_message "check" "1" "entenring cloning root"
+  actual=$(pwd)
+  if [[ -d ${_path_to_clone}  ]]
+    then 
+      cd ${repository} 
+      "EdSMessage" "1" ""
+
+      set_message "check" "1" "cloning to ${_repo_url} ${_branche_name} "    
+      git clone ${_repo_url} ${_branche_name}  >>  ${log_file}  2>&1 
+      do_error_control "${?}" "" "" "4" "" "" ""
+
+      cd ${actual}
+    else 
+      "EdEMessage" "1" ""
+  fi 
+  ############### Stack_TRACE_BUILDER ################
+	Function_PATH="$( dirname ${Function_PATH} )"
+	#################################################### 
+}
+
+
+
 function do_commit_and_push()
 {
   #|# Description :
@@ -336,3 +416,6 @@ function do_commit_and_push()
 	Function_PATH="$( dirname ${Function_PATH} )"
 	#################################################### 
 }
+
+#|# this variable is used to check if the module is corectly loaded.
+cast_git_module="true" 

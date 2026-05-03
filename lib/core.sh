@@ -95,7 +95,7 @@ function check_dependencies()
 
 	for _dep in "${_deps[@]}"
 	do
-		if ! command -v "${_dep}" >/dev/null 2>&1
+		if ! command -v "${_dep}" > /dev/null 2>&1
 		then
 			_missing+=("${_dep}")
 		fi
@@ -1503,28 +1503,33 @@ function display_continue_or_exit
    ####################################################
 }
 
-do_generate_password() 
+function do_generate_password() 
 {
     local length=${1}
     openssl rand -base64 $((length * 3 / 4)) | tr -d '=+/' | head -c "$length"
 }
 
 # Fonction pour générer une clé longue
-do_generate_key() 
+function do_generate_key() 
 {
     openssl rand -base64 96 | tr -d '\n'
 }
 
+MODULE_MANAGER="false"
+if [[ -f ${root_path}/lib/cast-module-namager.sh   ]]
+   then 
+	    set_message "check" "0" "Trying to activate the module manager for CAST" 
+			. ${root_path}/lib/cast-module-namager.sh  > /dev/null 2>&1
+			if [[ ${MODULE_MANAGER} = "true"  ]]
+			   then 
+				    set_message "EdSMessage" "0"    "" 
+         else 
+				    set_message "EdEMessage" "100" "" 
+      fi
+fi 
 
-
-
-if [[ -f docker-container.sh ]]
-  then
-		set_message "check" "0" "Loading docker-container.sh"
-		. docker-container.sh
-fi
-
-
+do_load_module "test-lib" "cast_test_lib"
+do_load_module "git"      "cast_git_module"
 
 check_dependencies
 core_functions_loaded="1"
